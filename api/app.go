@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 
@@ -30,7 +29,7 @@ err := godotenv.Load()
 	}
 
 	// Open a connection to the database
-	db, err = sql.Open("mysql", os.Getenv("DSN"))
+	db, err = sql.Open("mysql", "wq8pktyqq5d27v502yij:pscale_pw_GaV89BiEHHPedLCsKukNJLriAMjMFVLjXAsdXaWmGX7@tcp(aws.connect.psdb.cloud)/backend?tls=true&interpolateParams=true")
 	if err != nil {
 		log.Fatal("failed to open db connection", err)
 	}
