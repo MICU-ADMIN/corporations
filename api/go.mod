@@ -1,6 +1,6 @@
 module example.com/m/v2
 
-go 1.21.3
+go 1.19
 
 require (
 	github.com/bytedance/sonic v1.9.1 // indirect
