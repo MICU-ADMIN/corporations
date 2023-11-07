@@ -1,0 +1,35 @@
+﻿<Properties StartupConfiguration="{49D49BEC-8CA5-48D3-B92F-5602BF0E8C76}|https">
+  <MonoDevelop.Ide.ItemProperties.api PreferredExecutionTarget="/Applications/Vivaldi.app" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../../../Desktop/NSwagSample/Program.cs">
+    <Files>
+      <File FileName="appsettings.json" />
+      <File FileName="Program.cs" Line="15" Column="1" />
+      <File FileName="dbContext/dbHadithContext.cs" Line="7" Column="1" />
+      <File FileName="Controllers/HadithController.cs" />
+      <File FileName="Hadith.cs" Line="6" Column="18" />
+      <File FileName="Factory/HadithDbContextFactory.cs" Line="16" Column="9" />
+      <File FileName="../../../../Desktop/NSwagSample/Program.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="api">
+            <Node name="api">
+              <Node name="dbContext" expanded="True" />
+              <Node name="Factory" expanded="True">
+                <Node name="HadithDbContextFactory.cs" selected="True" />
+              </Node>
+              <Node name="Properties" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+</Properties>
