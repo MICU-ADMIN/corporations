@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,11 +24,17 @@ type Hadith struct {
 
 func main() {
 
-db, err := sql.Open("mysql", "1m8vf791734q5kf3rcjf:pscale_pw_JEJLP3rdncDmYOfFoZWWftODzvJEFK8IoAvNiTXw6HA@tcp(aws.connect.psdb.cloud)/backend?tls=true&interpolateParams=true",
-  )
-if err != nil {
-    log.Fatal("failed to open db connection", err)
-}
+err := godotenv.Load()
+	if err != nil {
+		log.Fatal("failed to load env", err)
+	}
+
+	// Open a connection to the database
+	db, err = sql.Open("mysql", os.Getenv("DSN"))
+	if err != nil {
+		log.Fatal("failed to open db connection", err)
+	}
+
 
 // Ping the database
 if err = db.Ping(); err != nil {

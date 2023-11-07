@@ -1,6 +1,6 @@
 datasource db {
     provider = "mysql"
-    url      = "mysql://zjcxy8o6523b508uhudq:pscale_pw_NYjBPU9Br2UqAYsLoCBzRT3thF73GONS05oFPXQugys@aws.connect.psdb.cloud/backend?sslaccept=strict"
+    url      = env("PRISMA_URL")
 }
 
 generator db {
