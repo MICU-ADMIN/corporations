@@ -1,6 +1,6 @@
 module golang-example
 
-go 1.21
+go 1.20.3
 
 toolchain go1.21.3
 
