@@ -1,35 +1,23 @@
-# Connecting to PlanetScale from Go
+# docker-gs-ping
 
-This example demonstrates how to connect a Go application to a PlanetScale database using [`go-sql-driver/mysql`](https://github.com/go-sql-driver/mysql).
+A simple Go server/microservice example for [Docker's Go Language Guide](https://docs.docker.com/language/golang/).
 
-Follow the instructions below to find and insert your PlanetScale credentials.
+Notable features:
 
-## Getting the credentials
+* Includes a [multi-stage `Dockerfile`](https://github.com/olliefr/docker-gs-ping/blob/main/Dockerfile.multistage).
+* Has a CI pipeline using GitHub Actions to run tests.
+* Has a CD pipeline using GitHub Actions to publish to Docker Hub.
 
-1. In the [PlanetScale dashboard](https://app.planetscale.com), select the database you want to connect to.
-2. Click "**Branches**" and select the branch you want to connect to.
-3. Click "**Connect**".
-4. Select "**Go**" from the "**Connect from**" dropdown.
-5. If the password is blurred, click "**New password**".
-6. Copy the contents of the `.env` tab. You won't be able to see the password again.
+## Want _moar_?!
 
-## Connecting your database
+There is a more advanced example in [olliefr/docker-gs-ping-roach](https://github.com/olliefr/docker-gs-ping-roach) using [CockroachDB](https://github.com/cockroachdb/cockroach).
 
-1. Create a file in the root of the project called `.env` and paste the connection details here from the previous section.
-2. Run the app using `go run .` in a terminal.
-3. Use `tests.http` file with the VS Code Rest Client plugin to test the API, or use the contents as a reference for your preferred API testing software.
+## Contributing
 
+This was written for an _introduction_ section of the Docker tutorial and as such it favours brevity and pedagogical clarity over robustness. 
 
-You can find more information in the [Foreign key constraints section of the Go quickstart](https://planetscale.com/docs/tutorials/connect-go-app#foreign-key-constraints).
+Thus, feedback is welcome, but please no nits or pedantry. Ain't nobody got time for that 🙃
 
-## More resources
+## License
 
-**Go resources**
-
-- For more in-depth Go instructions, check out the [Go quickstart](https://planetscale.com/docs/tutorials/connect-go-app).
-
-**Next steps**
-
-- Learn more about the [PlanetScale workflow](https://planetscale.com/docs/concepts/planetscale-workflow).
-- Learn how to [branch your PlanetScale database](https://planetscale.com/docs/concepts/branching) for development.
-- Learn how to ship schema changes to production with [deploy requests](https://planetscale.com/docs/concepts/deploy-requests).
+[Apache-2.0 License](LICENSE)
