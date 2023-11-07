@@ -1,0 +1,14 @@
+datasource db {
+    provider = "mysql"
+    url      = "mysql://zjcxy8o6523b508uhudq:pscale_pw_NYjBPU9Br2UqAYsLoCBzRT3thF73GONS05oFPXQugys@aws.connect.psdb.cloud/backend?sslaccept=strict"
+}
+
+generator db {
+    provider = "go run github.com/steebchen/prisma-client-go"
+}
+
+model Hadith {
+    Id    Int    @id @default(autoincrement())
+    Name  String
+    Price Int
+}
