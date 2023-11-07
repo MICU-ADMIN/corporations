@@ -22,7 +22,7 @@ type Hadith struct {
 
 func main() {
 
-db, err := sql.Open("mysql", "zjcxy8o6523b508uhudq:pscale_pw_NYjBPU9Br2UqAYsLoCBzRT3thF73GONS05oFPXQugys@tcp(aws.connect.psdb.cloud)/backend?tls=true&interpolateParams=true",
+db, err := sql.Open("mysql", "1m8vf791734q5kf3rcjf:pscale_pw_JEJLP3rdncDmYOfFoZWWftODzvJEFK8IoAvNiTXw6HA@tcp(aws.connect.psdb.cloud)/backend?tls=true&interpolateParams=true",
   )
 if err != nil {
     log.Fatal("failed to open db connection", err)
