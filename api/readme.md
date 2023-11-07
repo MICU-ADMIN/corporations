@@ -1,23 +1,35 @@
-# docker-gs-ping
+<p align="center">
+  <a href="https://fl0.com/" target="blank">
+    <img src="https://user-images.githubusercontent.com/88681427/217122968-e6132cad-1944-4ebe-9ec1-105af6a18c4f.png">
+  </a>
+</p>
 
-A simple Go server/microservice example for [Docker's Go Language Guide](https://docs.docker.com/language/golang/).
+<h2 align="center">Go Quickstart</h2>
+<p align="center">Backend engineering, supercharged.</p>
 
-Notable features:
+## Overview
 
-* Includes a [multi-stage `Dockerfile`](https://github.com/olliefr/docker-gs-ping/blob/main/Dockerfile.multistage).
-* Has a CI pipeline using GitHub Actions to run tests.
-* Has a CD pipeline using GitHub Actions to publish to Docker Hub.
+Use this repository to get up and running on FL0 with Go.
 
-## Want _moar_?!
+## Getting Started
 
-There is a more advanced example in [olliefr/docker-gs-ping-roach](https://github.com/olliefr/docker-gs-ping-roach) using [CockroachDB](https://github.com/cockroachdb/cockroach).
+Clone this repo and run the following commands from the project root:
 
-## Contributing
+1. `go run app.go`
+2. Visit http://localhost:3000 to see your app running
 
-This was written for an _introduction_ section of the Docker tutorial and as such it favours brevity and pedagogical clarity over robustness. 
+## Deploying to FL0
 
-Thus, feedback is welcome, but please no nits or pedantry. Ain't nobody got time for that 🙃
+Checkout our [Getting Started Guide](https://docs.fl0.com) in the FL0 documentation!
+
+## Questions
+
+If you have any questions about FL0 or this template codebase please head on over to our [Discord channel](https://discord.gg/AmmVTt9Jrw).
+
+## Issues
+
+Any issues or feature requests can be raised on the [Issues page](https://github.com/fl0zone/template-go/issues) of this repo.
 
 ## License
 
-[Apache-2.0 License](LICENSE)
+This template repository is [MIT licensed](LICENSE).
