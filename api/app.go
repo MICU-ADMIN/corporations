@@ -1,32 +1,52 @@
 package main
 
 import (
-	"embed"
-	"html/template"
-	"log"
+	"database/sql"
 	"net/http"
-	"os"
+
+	"mosque.icu.corporations.api/services/hadith_service"
+
+	"github.com/gin-gonic/gin"
 )
 
-//go:embed templates/*
-var resources embed.FS
+//  gobal variables
+var admin_db *sql.DB
 
-var t = template.Must(template.ParseFS(resources, "templates/*"))
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		data := map[string]string{
-			"Region": os.Getenv("DATABASE_URL"),
-		}
+	
 
-		t.ExecuteTemplate(w, "index.html.tmpl", data)
+	// create mysql connection 
+
+	// Open a connection to the database
+// 	admin_db, err = sql.Open("mysql", os.Getenv("DSN"))
+// 	if err != nil {
+// 		log.Fatal("failed to open admin_db connection", err)
+// 	}
+
+
+// // Ping the database
+// if err = admin_db.Ping(); err != nil {
+//     log.Fatal("failed to ping database", err)
+//  }
+
+
+// create the router 
+
+
+	router := gin.Default()
+
+router.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "hello")
 	})
 
-	log.Println("listening on", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+// hadiths
+	router.GET("/hadiths", hadith_service.GetHadiths)
+
+	router.Run()
+
+	
 }
+
+

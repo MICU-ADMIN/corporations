@@ -1,0 +1,11 @@
+
+datasource db {
+    provider = "postgres"
+    url      = env("HADITHPOSTGRES_PRISMA")
+}
+
+model hadith {
+    Id    Int    @id @default(autoincrement())
+    Name  String
+    Price Int
+}
