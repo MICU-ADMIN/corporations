@@ -2,76 +2,58 @@ package hadith_service
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
 
+var admin_db *sql.DB
+var err error
+
+
 func InitializeDB_Hadith() (*sql.DB, error) {
- err := godotenv.Load()
+
+	err := godotenv.Load()
   if err != nil {
     log.Println("Error loading .env file")
   }
-// not crucial only needed in dev as our providers have their own methods for injecting env 
 
-	// Get environment variables
-    host := os.Getenv("HADITHPOSTGRES_HOST")
-		if host == "" {
-		log.Fatal("InitializeDB_Hadith", "(host is empty)")
-		}
-    port := os.Getenv("HADITHPOSTGRES_PORT")
-	if port == "" {
-		log.Fatal("InitializeDB_Hadith", "(port is empty)")
-		}
-    user := os.Getenv("HADITHPOSTGRES_USER")
-	if user == "" {
-		log.Fatal("InitializeDB_Hadith", "(user is empty)")
-		}
-    password := os.Getenv("HADITHPOSTGRES_PASSWORD")
-	if password == "" {
-		log.Fatal("InitializeDB_Hadith", "(password is empty)")
-		}
-    dbname := os.Getenv("HADITHPOSTGRES_NAME")
-	if dbname == "" {
-		log.Fatal("InitializeDB_Hadith", "dbname is empty")
-		}
+	// create mysql connection 
 
-    // Construct the PostgreSQL connection string
-    connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	// Open a connection to the database
+	admin_db, err = sql.Open("mysql", os.Getenv("ADMINMYSQL_DSN"))
+	if err != nil {
+		log.Fatal("failed to open admin_db connection", err)
+	}
 
+// // Ping the database
+if err = admin_db.Ping(); err != nil {
+    log.Fatal("failed to ping database", err)
+ }
 
-    // Open a database connection
-    hadithDB, err := sql.Open("postgres", connStr)
-    if err != nil {
-        return nil, err
-    }
-
-    // Test the database connection
-    err = hadithDB.Ping()
-    if err != nil {
-        return nil, err
-    }
-
-    return hadithDB, nil
+    return admin_db, nil
 }
-
-
 
 type Hadith struct {
-	Id    int64
-	Name  string
-	Price int
+	Id             int
+	CollectionId   int
+	BookId         int
+	HadithNumber   int
+	Label          string
+	Arabic         string
+	EnglishTrans   string
+	PrimaryNarrator string
 }
 
 
 
-func GetHadiths(c *gin.Context) {
+func GetHadith(c *gin.Context) {
 	query := "SELECT * FROM hadith"
 db, err := InitializeDB_Hadith()
 	if err != nil {
@@ -89,7 +71,7 @@ defer res.Close()
 	hadiths := []Hadith{}
 	for res.Next() {
 		var hadith Hadith
-		err := res.Scan(&hadith.Id, &hadith.Name, &hadith.Price)
+        err := res.Scan(&hadith.Id, &hadith.CollectionId, &hadith.BookId, &hadith.HadithNumber, &hadith.Label, &hadith.Arabic, &hadith.EnglishTrans, &hadith.PrimaryNarrator)
 		if err != nil {
 			log.Fatal("(GetHadiths) res.Scan", err)
 		}
@@ -98,6 +80,86 @@ defer res.Close()
 db.Close()
 	c.JSON(http.StatusOK, hadiths)
 }
+
+func GetAhadith(c *gin.Context) {
+	query := "SELECT * FROM hadith"
+db, err := InitializeDB_Hadith()
+	if err != nil {
+		log.Fatal("(GetHadiths) InitializeDB_Hadith ", err)
+	}
+res, err := db.Query(query)
+	if err != nil {
+		log.Fatal("(GetHadiths) DB_Hadith.Query", err)
+	}
+defer res.Close()
+	if err != nil {
+		log.Fatal("(GetHadiths) DB_Hadith.Res", err)
+	}
+
+	hadiths := []Hadith{}
+	for res.Next() {
+		var hadith Hadith
+        err := res.Scan(&hadith.Id, &hadith.CollectionId, &hadith.BookId, &hadith.HadithNumber, &hadith.Label, &hadith.Arabic, &hadith.EnglishTrans, &hadith.PrimaryNarrator)
+		if err != nil {
+			log.Fatal("(GetHadiths) res.Scan", err)
+		}
+		hadiths = append(hadiths, hadith)
+	}
+db.Close()
+	c.JSON(http.StatusOK, hadiths)
+}
+
+func GetAhadithFiltered(c *gin.Context) {
+    // Get collectionId and bookId from query parameters
+    collectionID := c.Query("collectionId")
+    bookID := c.Query("bookId")
+
+    // Check if either collectionId or bookId is provided
+    if collectionID == "" || bookID == "" {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "Any of collectionId, bookId may be  missing.",
+        })
+        return
+    }
+
+    // Construct the SQL query
+    query := "SELECT id, collectionId, bookId, hadithNumber, label, arabic, englishTrans, primaryNarrator FROM hadith WHERE 1"
+
+    // Add conditions based on provided parameters
+    if collectionID != "" {
+        query += " AND collectionId = " + collectionID
+    }
+    if bookID != "" {
+        query += " AND bookId = " + bookID
+    }
+
+	db, err := InitializeDB_Hadith()
+	if err != nil {
+		log.Fatal("(GetAhadithFiltered) InitializeDB_Hadith ", err)
+	}
+res, err := db.Query(query)
+	if err != nil {
+            log.Println("query",query)
+		log.Fatal("(GetAhadithFiltered) GetAhadithFiltered.Query", err)
+	}
+defer res.Close()
+	if err != nil {
+		log.Fatal("(GetAhadithFiltered) GetAhadithFiltered.Res", err)
+	}
+
+	hadiths := []Hadith{}
+	for res.Next() {
+		var hadith Hadith
+        err := res.Scan(&hadith.Id, &hadith.CollectionId, &hadith.BookId, &hadith.HadithNumber, &hadith.Label, &hadith.Arabic, &hadith.EnglishTrans, &hadith.PrimaryNarrator)
+		if err != nil {
+			log.Fatal("(GetAhadithFiltered) res.Scan", err)
+		}
+		hadiths = append(hadiths, hadith)
+	}
+db.Close()
+	c.JSON(http.StatusOK, hadiths)
+}
+
 
 // func GetSingleHadith(c *gin.Context) {
 // 	hadithId := c.Param("hadithId")

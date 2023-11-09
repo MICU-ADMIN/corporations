@@ -1,11 +1,41 @@
-
 datasource db {
     provider = "postgres"
     url      = env("HADITHPOSTGRES_PRISMA")
 }
 
-model hadith {
+model author {
     Id    Int    @id @default(autoincrement())
-    Name  String
-    Price Int
+    Bio   String
+    Works Json
+    Books book[]
+}
+
+model chapter {
+    Id      Int      @id @default(autoincrement())
+    Name    Json
+    Range   Json
+    book    book?    @relation(fields: [bookId], references: [Id])
+    bookId  Int?
+    Hadiths hadith[]
+}
+
+model book {
+    Id          Int       @id @default(autoincrement())
+    Name        Json
+    Description String
+    Chapters    chapter[]
+    author      author?   @relation(fields: [authorId], references: [Id])
+    authorId    Int?
+}
+
+model hadith {
+    Id          Int      @id @default(autoincrement())
+    Narrator    String
+    Translation Json
+    Arabic      String
+    Heading     Int
+    Grade       Json
+    Refrence    Json
+    chapter     chapter? @relation(fields: [chapterId], references: [Id])
+    chapterId   Int?
 }
