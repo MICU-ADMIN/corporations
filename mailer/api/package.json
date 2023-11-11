@@ -1,0 +1,12 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@redwoodjs/api": "6.3.3",
+    "@redwoodjs/auth-firebase-api": "6.3.3",
+    "@redwoodjs/graphql-server": "6.3.3",
+    "firebase-admin": "11.10.1",
+    "resend": "^2.0.0"
+  }
+}
