@@ -2,7 +2,8 @@ package models
 
 import (
 	"go-jwt/database"
-	"go-jwt/lib/resend"
+	"go-jwt/lib"
+	"log"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -22,15 +23,26 @@ type User struct {
 // CreateUserRecord takes a pointer to a User struct and creates a user record in the database
 // It returns an error if there is an issue creating the user record
 func (user *User) CreateUserRecord() error {
-
-
 	result := database.GlobalDB.Create(&user)
- if result.Error != nil {
-  return result.Error
- }
 
-resend.SendEmail()
+	if result.Error != nil {
+    return result.Error
+    }
 
+  	to := user.Email
+    from := "noreply@mosque.icu"
+    subject := "Hello World"
+    html := "<p>Congrats on sending your <strong>first email</strong>!</p>"
+
+    success, err := lib.SendEmail(to, from, subject, html)
+    if err != nil {
+        log.Println("Error sending email:", err)
+        
+    }
+
+    if success {
+        log.Println("Email sent successfully.")
+    }
 
  return nil
 }
