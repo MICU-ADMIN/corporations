@@ -16,7 +16,7 @@ type Organization struct {
     Phone       string    `json:"phone" binding:"required"`
     Description string    `json:"description"`
     Services    string    `json:"services"`
-    Images      []string  `json:"images"`
+    Images      string  `json:"images"`
     // Add other fields as needed
 }
 
@@ -34,7 +34,7 @@ func (organization *Organization) CreateOrganizationRecord() error {
   	to := organization.Email
     from := "noreply@mosque.icu"
     subject := "Hello World"
-    html := "<p>Congrats on sending your <strong>first email</strong>!</p>"
+    html := "<p>Congrats on creating your <strong>first organization</strong>!</p>"
 
     success, err := lib.SendEmail(to, from, subject, html)
     if err != nil {

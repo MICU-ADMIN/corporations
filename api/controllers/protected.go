@@ -89,6 +89,38 @@ var organization models.Organization
  }
 }
 
+
+func Retrieve_Organization(c *gin.Context) {
+ // Initialize a user model
+ var organization models.Organization
+ // Get the email from the authorization middleware
+ email, _ := c.Get("email") 
+ // Query the database for the organization
+ result := database.GlobalDB.Where("owner_id = ?", email.(string)).First(&organization)
+ // If the organization is not found, return a 404 status code
+ if result.Error == gorm.ErrRecordNotFound {
+  c.JSON(404, gin.H{
+   "Error": "Organization Not Found",
+  })
+  c.Abort()
+  return
+ }
+ // If an error occurs while retrieving the organization profile, return a 500 status code
+ if result.Error != nil {
+  c.JSON(500, gin.H{
+   "Error": "Could Not Get Organization Profile",
+  })
+  c.Abort()
+  return
+ }
+ // Set the organization's password to an empty string
+//  organization.Password = ""
+ // Return the organization profile with a 200 status code
+ c.JSON(200, organization)
+}
+
+
+
 	// 	// Initialize an organization model
 // 	var org models.Organization
 
@@ -130,32 +162,4 @@ var organization models.Organization
 
 
 
-func Retrieve_Organization(c *gin.Context) {
- // Initialize a user model
- var user models.User
- // Get the email from the authorization middleware
- email, _ := c.Get("email") 
- // Query the database for the user
- result := database.GlobalDB.Where("email = ?", email.(string)).First(&user)
- // If the user is not found, return a 404 status code
- if result.Error == gorm.ErrRecordNotFound {
-  c.JSON(404, gin.H{
-   "Error": "User Not Found",
-  })
-  c.Abort()
-  return
- }
- // If an error occurs while retrieving the user profile, return a 500 status code
- if result.Error != nil {
-  c.JSON(500, gin.H{
-   "Error": "Could Not Get User Profile",
-  })
-  c.Abort()
-  return
- }
- // Set the user's password to an empty string
- user.Password = ""
- // Return the user profile with a 200 status code
- c.JSON(200, user)
-}
 

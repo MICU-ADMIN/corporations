@@ -47,6 +47,34 @@ func (user *User) CreateUserRecord() error {
  return nil
 }
 
+func (user *User) DeleteUserRecord() error {
+	result := database.GlobalDB.Delete(&user)
+
+	if result.Error != nil {
+    return result.Error
+    }
+
+  	to := user.Email
+    from := "noreply@mosque.icu"
+    subject := "Account deleted"
+    html := "<p>You have deleted your account<strong>feel free to sign up with the same credentials if you return</strong>!</p>"
+
+    success, err := lib.SendEmail(to, from, subject, html)
+    if err != nil {
+        log.Println("Error sending email:", err)
+        
+    }
+
+    if success {
+        log.Println("Email sent successfully.")
+    }
+
+ return nil
+}
+
+
+
+
 // HashPassword encrypts user password
 // HashPassword takes a string as a parameter and encrypts it using bcrypt
 // It returns an error if there is an issue encrypting the password
