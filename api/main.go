@@ -128,17 +128,24 @@ func setupRouter() *gin.Engine {
    // Get user profile information
    auth.GET("/profile", controllers.Retrieve_Profile)
   
-   //  // creation of the organization
+   // Retrieval of the organization
    auth.GET("/organization", controllers.Retrieve_Organization)
+   
+   
 
-  //  // creation of the organization
+  //  creation of the organization
    auth.POST("/organization", controllers.Create_Organization)
 
-
+   
   //  // creation of the invitation
+    auth.POST("/organization/invite", controllers.Invite_Organization)
+ 
+    //  // the response of the invitation
+    auth.PUT("/organization/invite", controllers.Accept_Organization)
+
+
   //  protected.POST("/invite/organisation", controllers.Create_Invitation)
 
-  //  // the response of the email
   //  protected.PATCH("/invite/organisation", controllers.Respond_Invitation)
 
   //  // revoking of invitation
