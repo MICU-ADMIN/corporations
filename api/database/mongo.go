@@ -1,8 +1,7 @@
-package database
+package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -11,208 +10,181 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Establishment represents an establishment document in the collection
-type Establishment struct {
-	Name     string
-	Address  string
-	Geo      string
-	Amenities []string
-	Capacity  int `json:"capacity" bson:"capacity"`
+// A Location Struct allows you to insert location documents into your
+// collection
+
+type Location struct {
+	Name              string
+	Coordinates       GeoJSON `json:"coordinates" bson:"coordinates"`
 }
 
-// ConnectToAtlasCluster connects to the MongoDB Atlas cluster
-func ConnectToAtlasCluster() (*mongo.Client, error) {
-	var mongoURI = "mongodb+srv://your_username:your_password@your_cluster.mongodb.net/?retryWrites=true&w=majority"
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
-	if err != nil {
-		return nil, err
-	}
-
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Println("Connected to MongoDB!\n")
-	return client, nil
+type GeoJSON struct {
+	Type        string    `json:"type" bson:"type"`
+	Coordinates []float64 `json:"coordinates" bson:"coordinates"`
 }
 
-// InsertDocuments inserts a list of establishments into the specified collection
-func InsertDocuments(ctx context.Context, collection *mongo.Collection, establishments []Establishment) error {
-	insertManyResult, err := collection.InsertMany(ctx, establishments)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(len(insertManyResult.InsertedIDs), "documents successfully inserted.\n")
-	return nil
-}
-
-// FindDocuments retrieves establishments from the collection based on the provided filter and options
-func FindDocuments(ctx context.Context, collection *mongo.Collection, filter bson.M, options *options.FindOptions) error {
-	cursor, err := collection.Find(ctx, filter, options)
-	if err != nil {
-		return err
-	}
-
-	defer cursor.Close(ctx)
-
-	for cursor.Next(ctx) {
-		establishment := Establishment{}
-		err := cursor.Decode(&establishment)
-		if err != nil {
-			return err
-		} else {
-			fmt.Println(establishment.Name, "has", len(establishment.Amenities), "amenities, and takes", establishment.Capacity, "minutes to make.\n")
-		}
-	}
-
-	return nil
-}
-
-// FindOneDocument retrieves a single establishment document from the collection based on the provided filter
-func FindOneDocument(ctx context.Context, collection *mongo.Collection, filter bson.D) (Establishment, error) {
-	var result Establishment
-	err := collection.FindOne(ctx, filter).Decode(&result)
-	if err != nil {
-		return Establishment{}, err
-	}
-
-	fmt.Println("Found a document with the ingredient potato", result, "\n")
-	return result, nil
-}
-
-// UpdateDocument updates a single document in the collection based on the provided filter and update document
-func UpdateDocument(ctx context.Context, collection *mongo.Collection, filter bson.D, updateDoc bson.D) error {
-	myRes := collection.FindOneAndUpdate(ctx, filter, updateDoc, nil)
-	if myRes.Err() != nil {
-		return myRes.Err()
-	}
-
-	_establishment := Establishment{}
-	decodeErr := myRes.Decode(&_establishment)
-	if decodeErr != nil {
-		return decodeErr
-	}
-
-	updatedEstablishment, _ := json.MarshalIndent(_establishment, "", "\t")
-	fmt.Println("The following document has been updated: \n", string(updatedEstablishment), "\n")
-
-	return nil
-}
-
-// DeleteDocuments deletes documents from the collection based on the provided filter
-func DeleteDocuments(ctx context.Context, collection *mongo.Collection, deleteQuery bson.M) error {
-	deleteResult, err := collection.DeleteMany(ctx, deleteQuery)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("Deleted", deleteResult.DeletedCount, "documents in the establishments collection\n")
-	return nil
-}
 
 func main() {
-	// TODO: Replace the placeholder connection string below with your
+
+	// TODO:
+	// Replace the placeholder connection string below with your
 	// Atlas cluster specifics. Be sure it includes
 	// a valid username and password! Note that in a production environment,
 	// you do not want to store your password in plain-text here.
-	
+	var mongoUri = "mongodb+srv://admin:ea58.CPVW33pf7r@cluster0.aehzac9.mongodb.net/?retryWrites=true&w=majority"
 
 	// CONNECT TO YOUR ATLAS CLUSTER:
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	client, err := ConnectToAtlasCluster(ctx, mongoURI)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(
+		mongoUri,
+	))
+
+	defer func() {
+		if err = client.Disconnect(ctx); err != nil {
+			panic(err)
+		}
+	}()
+
+	err = client.Ping(ctx, nil)
+
 	if err != nil {
 		fmt.Println("There was a problem connecting to your Atlas cluster. Check that the URI includes a valid username and password, and that your IP address has been added to the access list. Error: ")
 		panic(err)
 	}
 
-	defer func() {
-		if err := client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
+	fmt.Println("Connected to MongoDB!\n")
 
 	// Provide the name of the database and collection you want to use.
 	// If they don't already exist, the driver and Atlas will create them
 	// automatically when you first write data.
-	var dbName = "myDatabase"
-	var collectionName = "establishments"
+var dbName = "myDatabase"
+	var collectionName = "locations"
 	collection := client.Database(dbName).Collection(collectionName)
 
-	// Create establishments
-	eloteEstablishment := Establishment{
-		Name:      "elote",
-		Amenities: []string{"corn", "mayonnaise", "cotija cheese", "sour cream", "lime"},
-		Capacity:  35,
+	// Create a 2dsphere index on the "coordinates" field for geospatial queries
+	indexModel := mongo.IndexModel{
+		Keys: bson.D{{"coordinates", "2dsphere"}},
 	}
 
-	locoMocoEstablishment := Establishment{
-		Name:      "loco moco",
-		Amenities: []string{"ground beef", "butter", "onion", "egg", "bread bun", "mushrooms"},
-		Capacity:  54,
+	_, err = collection.Indexes().CreateOne(ctx, indexModel)
+	if err != nil {
+		fmt.Println("Error creating index:", err)
+		return
+	}
+	/*      *** INSERT DOCUMENTS ***
+	 *
+	 * You can insert individual documents using collection.Insert().
+	 * In this example, we're going to create 4 documents and then
+	 * insert them all in one call with InsertMany().
+	 */
+
+newYorkLocation := Location{
+		Name:              "New York",
+		Coordinates: GeoJSON{
+			Type:        "Point",
+			Coordinates: []float64{-74.0060, 40.7128}, // New York City coordinates
+		},
+	}
+	
+losAngelesLocation := Location{
+		Name:              "Los Angeles",
+		Coordinates: GeoJSON{
+			Type:        "Point",
+			Coordinates: []float64{-118.2437, 34.0522}, // Los Angeles coordinates
+		},
 	}
 
-	patatasBravasEstablishment := Establishment{
-		Name:      "patatas bravas",
-		Amenities: []string{"potato", "tomato", "olive oil", "onion", "garlic", "paprika"},
-		Capacity:  80,
+chicagoLocation := Location{
+		Name:              "Chicago",
+		Coordinates: GeoJSON{
+			Type:        "Point",
+			Coordinates: []float64{-87.6298, 41.8781}, // Chicago coordinates
+		},
 	}
 
-	friedRiceEstablishment := Establishment{
-		Name:      "fried rice",
-		Amenities: []string{"rice", "soy sauce", "egg", "onion", "pea", "carrot", "sesame oil"},
-		Capacity:  40,
+houstonLocation := Location{
+		Name:              "Houston",
+		Coordinates: GeoJSON{
+			Type:        "Point",
+			Coordinates: []float64{-95.3698, 29.7604}, // Houston coordinates
+		},
 	}
 
-	// Create an interface of all the created establishments
-	establishments := []interface{}{eloteEstablishment, locoMocoEstablishment, patatasBravasEstablishment, friedRiceEstablishment}
-
-	// Insert documents
-	err = InsertDocuments(ctx, collection, establishments)
+	// Create an interface of all the created locations
+	locations := []interface{}{newYorkLocation, losAngelesLocation, chicagoLocation, houstonLocation}
+	insertManyResult, err := collection.InsertMany(context.TODO(), locations)
 	if err != nil {
 		fmt.Println("Something went wrong trying to insert the new documents:")
 		panic(err)
 	}
 
-	// Find documents
-	var filter = bson.M{"capacity": bson.M{"$lt": 45}}
-	options := options.Find()
+	fmt.Println(len(insertManyResult.InsertedIDs), "documents successfully inserted.\n")
 
-	// Sort by `name` field ascending
-	options.SetSort(bson.D{{"name", 1}})
+	/*
+	 * *** FIND DOCUMENTS ***
+	 *
+	 * Now that we have data in Atlas, we can read it. To retrieve all of
+	 * the data in a collection, we create a filter for locations that are
+	 * within a certain distance from a given point.
+	 */
 
-	err = FindDocuments(ctx, collection, filter, options)
+	 // Define the center point coordinates (replace with the desired coordinates)
+centerPoint := GeoJSON{
+	Type:        "Point",
+	Coordinates: []float64{-74.006, 40.7128}, // New York City coordinates as an example
+}
+
+// Set up a geospatial query for locations within 1000 kilometers of the center point
+geoQuery := bson.M{
+	"coordinates": bson.M{
+		"$nearSphere": bson.M{
+			"$geometry":    centerPoint,
+			"$maxDistance": 1000000, // 1000 kilometers in meters
+		},
+	},
+}
+
+// Perform the geospatial query
+geoCursor, err := collection.Find(context.TODO(), geoQuery)
+if err != nil {
+	fmt.Println("Something went wrong trying to find locations near the center point:")
+	panic(err)
+}
+
+defer func() {
+	geoCursor.Close(context.Background())
+}()
+
+fmt.Println("Locations near the center point:")
+for geoCursor.Next(ctx) {
+	geoLocation := Location{}
+	err := geoCursor.Decode(&geoLocation)
 	if err != nil {
-		fmt.Println("Something went wrong trying to find the documents:")
+		fmt.Println("Error decoding geospatial query result:")
 		panic(err)
+	} else {
+		fmt.Println(geoLocation.Name, "is near the specified location.")
 	}
+}
 
-	// Find one document
-	var myFilter = bson.D{{"amenities", "potato"}}
-	result, e := FindOneDocument(ctx, collection, myFilter)
-	if e != nil {
-		fmt.Println("Something went wrong trying to find one document:")
-		panic(e)
-	}
+	/*      *** DELETE DOCUMENTS ***
+	 *
+	 *      As with other CRUD methods, you can delete a single document
+	 *      or all documents that match a specified filter. To delete all
+	 *      of the documents in a collection, pass an empty filter to
+	 *      the DeleteMany() method. In this example, we'll delete two of
+	 *      the locations.
+	 */
 
-	// Update a document
-	var updateDoc = bson.D{{"$set", bson.D{{"capacity", 72}}}}
-	err = UpdateDocument(ctx, collection, myFilter, updateDoc)
-	if err != nil {
-		fmt.Println("Something went wrong trying to update one document:")
-		panic(err)
-	}
+	deletedLocationNameList := [...]string{"New York", "Los Angeles"}
 
-	// Delete documents
-	deletedEstablishmentNameList := [...]string{"elote", "fried rice"}
-
-	var deleteQuery = bson.M{"name": bson.M{"$in": deletedEstablishmentNameList}}
-	err = DeleteDocuments(ctx, collection, deleteQuery)
+	var deleteQuery = bson.M{"name": bson.M{"$in": deletedLocationNameList}}
+	deleteResult, err := collection.DeleteMany(context.TODO(), deleteQuery)
 	if err != nil {
 		fmt.Println("Something went wrong trying to delete documents:")
 		panic(err)
 	}
-	fmt.Println("Deleted", len(deletedEstablishmentNameList), "documents in the establishments collection\n")
+	fmt.Println("Deleted", deleteResult.DeletedCount, "documents in the locations collection\n")
+
 }
