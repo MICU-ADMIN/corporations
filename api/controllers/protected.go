@@ -76,7 +76,6 @@ var organization models.Organization
   c.JSON(400, gin.H{
    "Error": "Invalid Inputs ",
   })
-
   c.Abort()
   return
  }
@@ -89,6 +88,7 @@ var organization models.Organization
   c.Abort()
   return
  }
+ c.JSON(200, "New Organization √ OwnerID: %s"+ organization.OwnerID)
 }
 
 
