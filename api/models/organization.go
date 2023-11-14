@@ -15,8 +15,8 @@ type Organization struct {
     Email       string    `json:"email" binding:"required" gorm:"unique"`
     Phone       string    `json:"phone" binding:"required"`
     Description string    `json:"description"`
-    Services    string    `json:"services"`
-    Images      string  `json:"images"`
+    Services    []string    `json:"services"`
+    Images      []string  `json:"images"`
     // Add other fields as needed
 }
 

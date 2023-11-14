@@ -14,7 +14,7 @@ type Member struct {
     Name        string    `json:"name"`
     Email       string    `json:"email"  binding:"required" gorm:"unique"`
     Phone       string    `json:"phone"`
-    Bio string    `json:"bio"`
+    Bio      string    `json:"bio"`
 	Role    string    `json:"role"`
     Photo      string  `json:"photo"`
     // Add other fields as needed
