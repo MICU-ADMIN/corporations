@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -18,13 +21,27 @@ func convertToMarkdown(filename string) string {
 	return strings.TrimSuffix(filename, filepath.Ext(filename)) + ".md"
 }
 
-func copyFile(src, dest string) error {
+func copyFileWithCodeBlock(src, dest, fileExtension string) error {
+	if fileExtension == "md" {
+		// Skip processing .md files
+		return nil
+	}
+
 	content, err := ioutil.ReadFile(src)
 	if err != nil {
 		return err
 	}
 
-	return ioutil.WriteFile(dest, content, 0644)
+	// Wrap the content with the specified markdown code block without the dot in the file extension
+	wrappedContent := fmt.Sprintf("```%s\n\n%s\n\n```\n", fileExtension, string(content))
+
+	return ioutil.WriteFile(dest, []byte(wrappedContent), 0644)
+}
+
+
+type Message struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
 }
 
 func sendToCloudflare(mdFilename string) error {
@@ -33,15 +50,18 @@ func sendToCloudflare(mdFilename string) error {
 		return err
 	}
 
-	// Include file content within the user's content message
-	payload := fmt.Sprintf(`{
-		"messages": [
-			{"role": "system", "content": "You are a friendly assistant that helps write mermaid overviews and outlooks on go projects"},
-			{"role": "user", "content": "Write a mermaid equivalent about this go file + insert go file content:\n\n%s"}
-		]
-	}`, string(content))
+	messages := []Message{
+		{"system", "You are a friendly assistant that helps write mermaid overviews and outlooks on go projects"},
+		{"user", fmt.Sprintf("Write a mermaid equivalent about this go file%s}", content)},
+	}
 
-	req, err := http.NewRequest("POST", cloudflareAPIEndpoint, strings.NewReader(payload))
+	inputs := map[string]interface{}{"messages": messages}
+	inputJSON, err := json.Marshal(inputs)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest("POST", cloudflareAPIEndpoint+"@cf/meta/llama-2-7b-chat-int8", bytes.NewBuffer(inputJSON))
 	if err != nil {
 		return err
 	}
@@ -52,14 +72,37 @@ func sendToCloudflare(mdFilename string) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Fatal(err)
 		return err
 	}
 	defer resp.Body.Close()
 
-	// Handle the response as needed
+	// Read the response body
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	// Check for a successful response (status code 2xx)
+	if resp.StatusCode/100 != 2 {
+		log.Fatalf("Cloudflare API request failed with status code %d: %s", resp.StatusCode, string(responseBody))
+		return fmt.Errorf("Cloudflare API request failed with status code %d", resp.StatusCode)
+	}
+
+	// Append the response to the Markdown file
+	responseMarkdown := fmt.Sprintf("```mermaid\n\n%s\n\n```\n", string(responseBody))
+    newContent := string(content) + "\n" + responseMarkdown
+
+	// Update the Markdown file
+	err = ioutil.WriteFile(mdFilename, []byte(newContent), 0644)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
+
 
 func processFile(path string, info os.FileInfo, err error) error {
 	if err != nil {
@@ -73,11 +116,13 @@ func processFile(path string, info os.FileInfo, err error) error {
 	mdFilename := convertToMarkdown(path)
 	fmt.Printf("Copying %s to %s\n", path, mdFilename)
 
-	if err := copyFile(path, mdFilename); err != nil {
+	fileExtension := strings.TrimPrefix(filepath.Ext(path), ".")
+	if err := copyFileWithCodeBlock(path, mdFilename, fileExtension); err != nil {
 		return err
 	}
 
 	if err := sendToCloudflare(mdFilename); err != nil {
+       log.Fatal(err)
 		return err
 	}
 

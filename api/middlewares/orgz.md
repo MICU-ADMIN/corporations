@@ -1,3 +1,5 @@
+```go
+
 package middlewares
 
 import (
@@ -51,3 +53,5 @@ func Orgz() gin.HandlerFunc {
   c.Next()
  }
 }
+
+```

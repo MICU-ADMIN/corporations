@@ -1,3 +1,5 @@
+```yaml
+
 basePath: /api
 definitions:
   controllers.LoginPayload:
@@ -121,3 +123,6 @@ securityDefinitions:
   BasicAuth:
     type: basic
 swagger: "2.0"
+
+
+```

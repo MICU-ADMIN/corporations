@@ -1,3 +1,5 @@
+```go
+
 package models
 
 import (
@@ -71,3 +73,5 @@ func (display *Display) CreateDisplayRecord() error {
 //  }
 //  return nil
 // }
+
+```

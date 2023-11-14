@@ -1,3 +1,5 @@
+```go
+
 package main
 
 import (
@@ -215,3 +217,6 @@ r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
  return r
 
 }
+
+
+```

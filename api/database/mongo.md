@@ -1,3 +1,5 @@
+```go
+
 package database
 
 import (
@@ -188,3 +190,6 @@ for geoCursor.Next(ctx) {
 	fmt.Println("Deleted", deleteResult.DeletedCount, "documents in the locations collection\n")
 
 }
+
+
+```

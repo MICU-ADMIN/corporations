@@ -1,3 +1,5 @@
+```go
+
 package lib
 
 import (
@@ -25,3 +27,5 @@ func SendEmail(to, from, subject, html string) (bool, error) {
     log.Println(sent)
     return true, nil  // Return nil for the error since the email was sent successfully
 }
+
+```

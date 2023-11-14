@@ -1,3 +1,5 @@
+```go
+
 package models
 
 import (
@@ -84,3 +86,5 @@ func (organization *Organization) DeleteOrganizationRecord(id int) error {
 //  }
 //  return nil
 // }
+
+```

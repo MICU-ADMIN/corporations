@@ -1,3 +1,5 @@
+```go
+
 
 package database 
 
@@ -41,3 +43,6 @@ func InitDatabase() (err error) {
 
 	return
 }
+
+
+```

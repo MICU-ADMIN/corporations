@@ -1,3 +1,5 @@
+```go
+
 package database
 
 import (
@@ -135,3 +137,6 @@ func GetRedis(key string) (string, error) {
 
 // 	fmt.Println(val)
 // }
+
+
+```

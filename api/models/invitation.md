@@ -1,3 +1,5 @@
+```go
+
 package models
 
 import (
@@ -69,3 +71,5 @@ func (invitation *Invitation) CheckPassword(providedPassword string) error {
  }
  return nil
 }
+
+```

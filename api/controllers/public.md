@@ -1,3 +1,5 @@
+```go
+
 package controllers
 
 import (
@@ -152,3 +154,5 @@ func Login(c *gin.Context) {
  }
  c.JSON(200, tokenResponse)
 }
+
+```

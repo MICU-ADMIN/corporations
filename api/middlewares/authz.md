@@ -1,3 +1,5 @@
+```go
+
 package middlewares
 
 import (
@@ -52,3 +54,5 @@ func Authz() gin.HandlerFunc {
   c.Next()
  }
 }
+
+```

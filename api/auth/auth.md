@@ -1,3 +1,5 @@
+```go
+
 package auth
 
 import (
@@ -83,3 +85,5 @@ func (j *JwtWrapper) ValidateToken(signedToken string) (claims *JwtClaim, err er
  }
  return
 }
+
+```

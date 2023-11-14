@@ -1,8 +1,11 @@
+```go
+
 package main
 
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -18,13 +21,21 @@ func convertToMarkdown(filename string) string {
 	return strings.TrimSuffix(filename, filepath.Ext(filename)) + ".md"
 }
 
-func copyFile(src, dest string) error {
+func copyFileWithCodeBlock(src, dest, fileExtension string) error {
+	if fileExtension == "md" {
+		// Skip processing .md files
+		return nil
+	}
+
 	content, err := ioutil.ReadFile(src)
 	if err != nil {
 		return err
 	}
 
-	return ioutil.WriteFile(dest, content, 0644)
+	// Wrap the content with the specified markdown code block without the dot in the file extension
+	wrappedContent := fmt.Sprintf("```%s\n\n%s\n\n```\n", fileExtension, string(content))
+
+	return ioutil.WriteFile(dest, []byte(wrappedContent), 0644)
 }
 
 func sendToCloudflare(mdFilename string) error {
@@ -35,11 +46,12 @@ func sendToCloudflare(mdFilename string) error {
 
 	// Include file content within the user's content message
 	payload := fmt.Sprintf(`{
-		"messages": [
-			{"role": "system", "content": "You are a friendly assistant that helps write mermaid overviews and outlooks on go projects"},
-			{"role": "user", "content": "Write a mermaid equivalent about this go file + insert go file content:\n\n%s"}
-		]
-	}`, string(content))
+	"messages": [
+		{"role": "system", "content": "You are a friendly assistant that helps write mermaid overviews and outlooks on go projects"},
+		{"role": "user", "content": "Write a mermaid equivalent about this go file%s}"}
+	]
+}`, content)
+
 
 	req, err := http.NewRequest("POST", cloudflareAPIEndpoint, strings.NewReader(payload))
 	if err != nil {
@@ -52,6 +64,7 @@ func sendToCloudflare(mdFilename string) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
+        log.Fatal(err)
 		return err
 	}
 	defer resp.Body.Close()
@@ -73,11 +86,13 @@ func processFile(path string, info os.FileInfo, err error) error {
 	mdFilename := convertToMarkdown(path)
 	fmt.Printf("Copying %s to %s\n", path, mdFilename)
 
-	if err := copyFile(path, mdFilename); err != nil {
+	fileExtension := strings.TrimPrefix(filepath.Ext(path), ".")
+	if err := copyFileWithCodeBlock(path, mdFilename, fileExtension); err != nil {
 		return err
 	}
 
 	if err := sendToCloudflare(mdFilename); err != nil {
+       log.Fatal(err)
 		return err
 	}
 
@@ -96,3 +111,6 @@ func main() {
 		fmt.Println("Error:", err)
 	}
 }
+
+
+```
