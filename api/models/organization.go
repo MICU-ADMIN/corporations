@@ -49,6 +49,19 @@ func (organization *Organization) CreateOrganizationRecord() error {
  return nil
 }
 
+// DeleteOrganizationRecord deletes an organization record in the database
+// DeleteOrganizationRecord takes an ID as a parameter and deletes the corresponding organization record in the database
+// It returns an error if there is an issue deleting the organization record
+func (organization *Organization) DeleteOrganizationRecord(id int) error {
+	result := database.GlobalDB.Delete(&organization, id)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
 // HashPassword encrypts organization password
 // HashPassword takes a string as a parameter and encrypts it using bcrypt
 // It returns an error if there is an issue encrypting the password
