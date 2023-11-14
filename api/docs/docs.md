@@ -207,3 +207,31 @@ func init() {
 
 
 ```
+
+```mermaid
+
+Here is a generated Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    A[SwaggerInfo] --> B[Swagger Template]
+    B --> C[Schemes]
+    B --> D[Host]
+    B --> E[BasePath]
+    B --> F[Paths]
+    F --> G[("/protected/profile")]
+    G --> H[get]
+    H --> I[produces]
+    I --> J[("application/json")]
+    F --> G[("/public/login")]
+    G --> H[post]
+    H --> I[consumes]
+    I --> J[("application/json")]
+    H --> K[("Login")]
+    K --> L[parameters]
+    L --> M[{"name": "EnterDetails", "in": "body", "required": true, "schema": "$ref": "#/definitions/controllers.LoginPayload"}]
+    F --> G[("/public/signup")]
+    G --> H[post]
+    H --> I[consumes]
+    I --> J[("application
+
+```

@@ -45,62 +45,77 @@ type Message struct {
 }
 
 func sendToCloudflare(mdFilename string) error {
-	content, err := ioutil.ReadFile(mdFilename)
-	if err != nil {
-		return err
-	}
+    // Read Markdown file content
+    content, err := ioutil.ReadFile(mdFilename)
+    if err != nil {
+        return err
+    }
 
-	messages := []Message{
-		{"system", "You are a friendly assistant that helps write mermaid overviews and outlooks on go projects"},
-		{"user", fmt.Sprintf("Write a mermaid equivalent about this go file%s}", content)},
-	}
+    // Create messages slice
+   messages := []Message{
+    {"system", "You specialize in generating Mermaid Markdown syntax for Go projects."},
+    {"user", fmt.Sprintf("Generate a Mermaid Markdown overview for the following Go file:\n```go\n%s\n```", content)},
+}
 
-	inputs := map[string]interface{}{"messages": messages}
-	inputJSON, err := json.Marshal(inputs)
-	if err != nil {
-		return err
-	}
+    // Prepare input JSON
+    inputs := map[string]interface{}{"messages": messages}
+    inputJSON, err := json.Marshal(inputs)
+    if err != nil {
+        return err
+    }
 
-	req, err := http.NewRequest("POST", cloudflareAPIEndpoint+"@cf/meta/llama-2-7b-chat-int8", bytes.NewBuffer(inputJSON))
-	if err != nil {
-		return err
-	}
+    // Create HTTP request
+    req, err := http.NewRequest("POST", cloudflareAPIEndpoint, bytes.NewBuffer(inputJSON))
+    if err != nil {
+        return err
+    }
 
-	req.Header.Set("Authorization", "Bearer "+accessToken)
-	req.Header.Set("Content-Type", "application/json")
+    // Set Authorization and Content-Type headers
+    req.Header.Set("Authorization", "Bearer "+accessToken)
+    req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-	defer resp.Body.Close()
+    // Make the request
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        log.Fatalf("Error making request to Cloudflare API: %v", err)
+        return err
+    }
+    defer resp.Body.Close()
+// Unmarshal JSON response into the result struct
+var result struct {
+    Result struct {
+        Response string `json:"response"`
+    } `json:"result"`
+}
 
-	// Read the response body
-	responseBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
+  responseBody, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        log.Fatalf("Error reading response body: %v", err)
+        return err
+    }
 
-	// Check for a successful response (status code 2xx)
-	if resp.StatusCode/100 != 2 {
-		log.Fatalf("Cloudflare API request failed with status code %d: %s", resp.StatusCode, string(responseBody))
-		return fmt.Errorf("Cloudflare API request failed with status code %d", resp.StatusCode)
-	}
+	log.Println(string(responseBody))
 
-	// Append the response to the Markdown file
-	responseMarkdown := fmt.Sprintf("```mermaid\n\n%s\n\n```\n", string(responseBody))
-    newContent := string(content) + "\n" + responseMarkdown
 
-	// Update the Markdown file
-	err = ioutil.WriteFile(mdFilename, []byte(newContent), 0644)
-	if err != nil {
-		return err
-	}
+if err := json.Unmarshal(responseBody, &result); err != nil {
+    log.Fatalf("Error unmarshaling JSON response: %v", err)
+    return err
+}
 
-	return nil
+log.Println(result.Result.Response)
+
+// Append the response to the Markdown file
+responseMarkdown := fmt.Sprintf("```mermaid\n\n%s\n\n```\n", result.Result.Response)
+newContent := string(content) + "\n" + responseMarkdown
+
+    // Update the Markdown file
+    err = os.WriteFile(mdFilename, []byte(newContent), 0644)
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
 
 
@@ -113,6 +128,12 @@ func processFile(path string, info os.FileInfo, err error) error {
 		return nil
 	}
 
+	// Skip processing .md files
+	if filepath.Ext(path) == ".md" {
+		fmt.Printf("Skipping %s\n", path)
+		return nil
+	}
+
 	mdFilename := convertToMarkdown(path)
 	fmt.Printf("Copying %s to %s\n", path, mdFilename)
 
@@ -122,12 +143,37 @@ func processFile(path string, info os.FileInfo, err error) error {
 	}
 
 	if err := sendToCloudflare(mdFilename); err != nil {
-       log.Fatal(err)
+		log.Fatal(err)
 		return err
 	}
 
 	return nil
 }
+
+// func processFile(path string, info os.FileInfo, err error) error {
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	if info.IsDir() {
+// 		return nil
+// 	}
+
+// 	mdFilename := convertToMarkdown(path)
+// 	fmt.Printf("Copying %s to %s\n", path, mdFilename)
+
+// 	fileExtension := strings.TrimPrefix(filepath.Ext(path), ".")
+// 	if err := copyFileWithCodeBlock(path, mdFilename, fileExtension); err != nil {
+// 		return err
+// 	}
+
+// 	if err := sendToCloudflare(mdFilename); err != nil {
+//        log.Fatal(err)
+// 		return err
+// 	}
+
+// 	return nil
+// }
 
 func main() {
 	if len(os.Args) != 2 {

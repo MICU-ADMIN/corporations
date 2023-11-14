@@ -75,3 +75,25 @@ func (website *Website) CreateWebsiteRecord() error {
 // }
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    A[Website] --> B[Database]
+    A --> C[CreateWebsiteRecord]
+    A --> D[HashPassword]
+    A --> E[CheckPassword]
+    B --> F[Save Website Record]
+    F --> G[Email]
+    F --> H[Log]
+    D --> I[Encrypt Password]
+    I --> J[Compare Password]
+    J --> K[Success]
+    K --> L[Error]
+```
+This overview shows the relationships between the different parts of the Go file, including the database, creating a new website record, encrypting the website password, comparing the password, and logging any errors. The arrows represent the flow of data or control between these parts, with the source of the arrow indicating the function or method that is being called, and the target indicating the function or method that is being called or the data that is being passed.
+Note that this is just a high-level overview, and there may be additional details or nuances in the code that are not captured here.
+
+```

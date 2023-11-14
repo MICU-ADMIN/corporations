@@ -15,7 +15,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "database/database.md",
+                "file": "controllers/public.md",
                 "mode": "source",
                 "source": false
               }
@@ -87,7 +87,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "database/database.md",
+                "file": "controllers/public.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "database/database.md",
+                "file": "controllers/public.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -127,7 +127,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "database/database.md"
+                "file": "controllers/public.md"
               }
             }
           }
@@ -150,26 +150,57 @@
   },
   "active": "d0f2c5c7c887c1f7",
   "lastOpenFiles": [
+    "go.md",
+    "go-jwt.md",
+    "models/organization.md",
+    "models/user.md",
+    "models/website.md",
+    "models/member.md",
+    "auth/auth.md",
+    "database/database.md",
+    "models/invitation.md",
+    "docs/swagger.md",
+    "docs/docs.md",
+    "controllers/public.md",
     "database/mongo.md",
     "database/redis.md",
+    "middlewares/authz.md",
+    "main.md",
+    "rover/rover.md",
+    "middlewares/orgz.md",
+    "lib/resend.md",
     "controllers/protected.md",
-    "controllers/public.md",
-    "models/invitation.md",
-    "models/member.md",
-    "models/user.md",
-    "models/organization.md",
     "models/establishment.md",
     "models/display.md",
     "models/prayer.md",
-    "models/website.md",
-    "models/event.md",
-    "go-jwt.md",
-    "main.md",
-    "go.md",
-    "lib/resend.md",
-    "auth/auth.md",
-    "database/database.md"
+    "models/event.md"
   ]
 }
+
+```
+
+```mermaid
+
+Here is a generated Mermaid Markdown overview for the provided Go file:
+```mermaid
+graph LR
+    left[Left] --> right[Right]
+    left-ribbon[Left Ribbon] --> right-ribbon[Right Ribbon]
+    main[Main] --> left[Left] --> right[Right]
+    left[Left]
+        + [File: controllers/public.md]
+        + [File: models/organization.md]
+        + [File: models/user.md]
+        + [File: models/website.md]
+        + [File: models/member.md]
+        + [File: auth/auth.md]
+        + [File: database/database.md]
+        + [File: models/invitation.md]
+        + [File: docs/swagger.md]
+        + [File: docs/docs.md]
+        + [File: main.md]
+        + [File: rover/rover.md]
+        + [File: middlewares/authz.md]
+        + [File: middlewares/orgz.
 
 ```

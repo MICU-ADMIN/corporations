@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "database/database.md",
+                "file": "models/event.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "database/database.md",
+                "file": "models/event.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "database/database.md",
+                "file": "models/event.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "database/database.md"
+                "file": "models/event.md"
               }
             }
           }
@@ -148,24 +148,29 @@
   },
   "active": "d0f2c5c7c887c1f7",
   "lastOpenFiles": [
+    "models/display.md",
+    "middlewares/orgz.md",
+    "middlewares/authz.md",
+    "controllers/public.md",
+    "go.md",
+    "go-jwt.md",
+    "models/organization.md",
+    "models/user.md",
+    "models/website.md",
+    "models/member.md",
+    "auth/auth.md",
+    "database/database.md",
+    "models/invitation.md",
+    "docs/swagger.md",
+    "docs/docs.md",
     "database/mongo.md",
     "database/redis.md",
-    "controllers/protected.md",
-    "controllers/public.md",
-    "models/invitation.md",
-    "models/member.md",
-    "models/user.md",
-    "models/organization.md",
-    "models/establishment.md",
-    "models/display.md",
-    "models/prayer.md",
-    "models/website.md",
-    "models/event.md",
-    "go-jwt.md",
     "main.md",
-    "go.md",
+    "rover/rover.md",
     "lib/resend.md",
-    "auth/auth.md",
-    "database/database.md"
+    "controllers/protected.md",
+    "models/establishment.md",
+    "models/prayer.md",
+    "models/event.md"
   ]
 }

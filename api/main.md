@@ -220,3 +220,25 @@ r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 
 ```
+
+```mermaid
+
+Start the server
+r.Run(":8080")
+```
+
+This Go file defines a REST API with JWT authentication using the Gin framework. It includes routes for logging in and out, as well as routes for retrieving and creating resources. The `main` function initializes the database, sets up the router, and starts the server. The `setupRouter` function sets up the router and adds the routes, and the `main` function runs the server on port 8080. The `docs` route is used to serve the Swagger documentation for the API.
+To generate Mermaid Markdown syntax for this Go file, you can use the following command:
+```mermaid
+graph LR
+    A[main] --> B[database.InitDatabase]
+    B --> C[err]
+    C --> D[log.Fatalln]
+    D --> E[database.GlobalDB.AutoMigrate]
+    E --> F[models.User{}]
+    F --> G[models.Organization{}]
+    G --> H[models.Display{}]
+    H --> I[models.Event{}]
+    I --> J
+
+```

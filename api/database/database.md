@@ -46,3 +46,24 @@ func InitDatabase() (err error) {
 
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    A[GlobalDB] --> B[InitDatabase]
+    B --> C[Read environment variables from .env file]
+    C --> D[Create DSN using environment variables]
+    D --> E[Create PostgreSQL connection using DSN]
+    E --> F[Store connection in GlobalDB]
+    F --> G[Return error if connection fails]
+    G --> H[End]
+```
+In this overview, the `GlobalDB` node represents the global database object, which is the main entry point for the code. The `InitDatabase` function is called to create a PostgreSQL connection and store it in the `GlobalDB` variable.
+The `InitDatabase` function is divided into several steps:
+1. `Read environment variables from .env file`: This step reads the environment variables from the `.env` file using the `godotenv` package.
+2. `Create DSN using environment variables`: This step creates the data source name (DSN) using the environment variables read in step 1.
+3. `Create PostgreSQL
+
+```

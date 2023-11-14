@@ -101,3 +101,38 @@ func (user *User) CheckPassword(providedPassword string) error {
 }
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    A[Go Project] --> B[Models]
+    B --> C[User]
+    C --> D[CreateUserRecord]
+    D --> E[Email]
+    E --> F[From]
+    F --> G[Subject]
+    G --> H[HTML]
+    H --> I[SendEmail]
+    I --> J[Success]
+    J --> K[Error]
+    K --> L[DeleteUserRecord]
+    L --> M[Email]
+    M --> N[From]
+    N --> O[Subject]
+    O --> P[HTML]
+    P --> Q[SendEmail]
+    Q --> R[Success]
+    R --> S[Error]
+    S --> T[DeleteUserRecord]
+    T --> U[User]
+    U --> V[HashPassword]
+    V --> W[Password]
+    W --> X[CheckPassword]
+    X --> Y[CompareHashAndPassword]
+    Y --> Z[ReturnError]
+    Z --> A[Nil]
+```
+
+```

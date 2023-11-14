@@ -75,3 +75,25 @@ func (display *Display) CreateDisplayRecord() error {
 // }
 
 ```
+
+
+```mermaid
+
+graph LR
+    A[CreateDisplayRecord] --> B[database.GlobalDB.Create(&display)]
+    B --> C[result.Error]
+    C --> D[if result.Error != nil]
+    D --> E[return result.Error]
+
+    A --> F[to] --> G[from] --> H[subject] --> I[html]
+    F --> K[lib.SendEmail(to, from, subject, html)]
+    K --> L[if err != nil] --> M[log.Println("Error sending email:", err)]
+    L --> M[if success] --> N[log.Println("Email sent successfully.")]
+
+    A --> J[HashPassword] --> K[bcrypt.GenerateFromPassword([]byte(password), 14)]
+    K --> L[if err != nil] --> M[log.Println("Error encrypting password:", err)]
+    L --> M[display.Password = string(bytes)] --> N[return nil]
+
+    A --> P[
+
+```

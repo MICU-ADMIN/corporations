@@ -88,3 +88,40 @@ func (organization *Organization) DeleteOrganizationRecord(id int) error {
 // }
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    organization[Organization] --> database[Database]
+    organization --> lib[Library]
+    organization --> email[Email]
+    organization --> phone[Phone]
+    organization --> description[Description]
+    organization --> services[Services]
+    organization --> images[Images]
+    organization --> otherFields[Other Fields]
+
+// CreateOrganizationRecord
+graph LR
+    organization --> createOrganizationRecord[Create Organization Record]
+    createOrganizationRecord --> database[Create Record in Database]
+    createOrganizationRecord --> sendEmail[Send Email]
+
+// DeleteOrganizationRecord
+graph LR
+    organization --> deleteOrganizationRecord[Delete Organization Record]
+    deleteOrganizationRecord --> database[Delete Record in Database]
+
+// HashPassword
+graph LR
+    organization --> hashPassword[Hash Password]
+    hashPassword --> bcrypt[Use bcrypt to encrypt password]
+
+// CheckPassword
+graph LR
+    organization --> checkPassword[Check Password]
+    checkPassword --> bcrypt[Compare hash
+
+```

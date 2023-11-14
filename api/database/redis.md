@@ -140,3 +140,49 @@ func GetRedis(key string) (string, error) {
 
 
 ```
+
+```mermaid
+
+Here is a generated Mermaid Markdown overview for the Go file you provided:
+### SetRedis
+
+#### Parameters
+
+* `key`: The key for the Redis operation.
+* `value`: The value to set for the Redis operation.
+* `expiration`: The duration for which the value should be stored in Redis.
+
+### SetRedisHTTP
+
+#### Parameters
+
+* `key`: The key for the Redis operation.
+
+#### Returns
+
+* `value`: The value stored in Redis.
+
+### GetRedis
+
+#### Parameters
+
+* `key`: The key for the Redis operation.
+
+#### Returns
+
+* `value`: The value stored in Redis.
+
+### SetAndGetRedis
+
+#### Parameters
+
+* `ctx`: The context for the Redis operation.
+* `key`: The key for the Redis operation.
+* `value`: The value to set for the Redis operation.
+* `expiration`: The duration for which the value should be stored in Redis.
+
+#### Returns
+
+* `value`: The value stored in Redis
+
+```

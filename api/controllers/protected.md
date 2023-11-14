@@ -307,3 +307,26 @@ if err != nil {
 
 
 ```
+
+```mermaid
+
+Error == gorm.ErrRecordNotFound {
+//   c.JSON(404, gin.H{"error": "Organization Not Found"})
+//   c.Abort()
+//   return
+//  }
+
+//  // If an error occurs while retrieving the organization profile, return a 500 status code
+//  if result.Error != nil {
+//   c.JSON(500, gin.H{"error": "Could Not Get Organization Profile"})
+//   c.Abort()
+//   return
+//  }
+
+//  // Set the organization's password to an empty string
+//  organization.Password = ""
+
+//  // Return the organization profile with a 200 status code
+//  c.JSON(200, organization)
+
+```

@@ -55,3 +55,25 @@ func Orgz() gin.HandlerFunc {
 }
 
 ```
+
+```mermaid
+
+
+graph LR
+    A[Middlewares] --> B[Orgz]
+    B --> C[Get Authorization Header]
+    B --> D[Split Authorization Header]
+    D --> E[Trim Token]
+    E --> F[Create JwtWrapper]
+    F --> G[Validate Token]
+    G --> H[Get Claims]
+    H --> I[Set Context with Claims]
+    I --> J[Continue to Next Handler]
+    J --> K[Abort]
+```
+In this overview, the `Middlewares` package is the root of the diagram, representing the package that contains the `Orgz` function.
+The `Orgz` function is represented by the `B` node, which takes a `gin.Context` as an argument and returns a `gin.HandlerFunc`.
+The `Orgz` function first gets the `Authorization` header from the request using the `C` node.
+It then splits the `Authorization` header into two parts using the `D` node, and trims the
+
+```

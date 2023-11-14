@@ -75,3 +75,22 @@ func (prayer *Prayer) CreatePrayerRecord() error {
 // }
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    A[CreatePrayerRecord] --> B[database.GlobalDB.Create(&prayer)]:Create Prayer Record
+    B --> C[result.Error]:Error Creating Prayer Record
+    A --> D[to, from, subject, html]:Send Email
+    D --> E[err]:Error Sending Email
+    A --> F[prayer.Password = string(bytes)]:Encrypt Password
+    F --> G[err]:Error Encrypting Password
+    A --> H[bcrypt.CompareHashAndPassword([]byte(prayer.Password), []byte(providedPassword))] :Check Password
+    H --> I[err]:Error Comparing Passwords
+
+```
+This Mermaid diagram shows the relationships between the functions and variables in the Go file. The `A` nodes represent the entry points of the program, while the `B`, `C`, `D`, `E`, `F`, `G`, and `H` nodes represent the functions and variables that are called or used by the entry points.
+
+```

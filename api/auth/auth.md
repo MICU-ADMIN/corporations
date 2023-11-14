@@ -87,3 +87,29 @@ func (j *JwtWrapper) ValidateToken(signedToken string) (claims *JwtClaim, err er
 }
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    A[JwtWrapper] --> B[SecretKey]
+    B --> C[Issuer]
+    B --> D[ExpirationMinutes]
+    B --> E[ExpirationHours]
+    A --> F[GenerateToken]
+    F --> G[Claims]
+    G --> H[SignedToken]
+    A --> I[RefreshToken]
+    I --> J[Claims]
+    J --> K[SignedToken]
+    K --> L[ValidateToken]
+    L --> M[Claims]
+    M --> N[Error]
+```
+In this overview, the `JwtWrapper` struct is at the top of the graph, representing the root of the file. It has several dependencies:
+* `SecretKey`: a string that holds the secret key used for signing the JWT token.
+* `Issuer`: a string that holds the issuer of the JWT token.
+* `ExpirationMinutes`: an integer that holds the number of minutes the JWT token
+
+```

@@ -126,3 +126,20 @@ swagger: "2.0"
 
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the provided Go file:
+### API Description
+
+The API is a Go RESTful API with JWT authentication implemented using the Gin Framework. It has the following endpoints:
+
+### Login Endpoint
+
+The `/public/login` endpoint allows users to log in to the API using their email and password. The request body must contain an object with the email and password fields. If the credentials are valid, the API will return a `200` status code and a JSON response with the user's details. If the credentials are invalid, the API will return a `400` status code and a JSON response with an error message.
+### Signup Endpoint
+
+The `/public/signup` endpoint allows users to sign up for an account on the API. The request body must contain an object with the email and password fields. If the signup is successful, the API will return a `200` status code and a JSON response with the user's details. If the signup is unsuccessful, the API will return a `400` status code and a JSON response with an error message.
+###
+
+```

@@ -75,3 +75,28 @@ func (event *Event) CreateEventRecord() error {
 // }
 
 ```
+
+
+```mermaid
+graph LR
+    A[Event] --> B[Database]
+    A --> C[CreateEventRecord]
+    A --> D[HashPassword]
+    A --> E[CheckPassword]
+    B --> F[Event Record]
+    F --> G[Email]
+    F --> H[Phone]
+    F --> I[Description]
+    F --> J[Services]
+    F --> K[Images]
+    D --> L[Error]
+    C --> M[Success]
+    M --> N[Email Sent]
+    E --> O[Password Encrypted]
+    E --> P[Password Compared]
+    D --> Q[Password Error]
+    J --> R[Other Fields]
+```
+This overview shows the relationships between the different parts of the Go file, including the `Event` struct, the database, the `CreateEventRecord` function, the `HashPassword` and `CheckPassword` functions, and the event record in the database. The arrows represent the data flow between these parts, with the `Event` struct serving as the root
+
+```

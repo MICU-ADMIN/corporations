@@ -75,3 +75,32 @@ func (member *Member) CreateMemberRecord() error {
 // }
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    A[Member] --> B[OrganizationID]
+    A --> C[Name]
+    A --> D[Email]
+    A --> E[Phone]
+    A --> F[Bio]
+    A --> G[Role]
+    A --> H[Photo]
+    A --> I[CreateMemberRecord]
+    A --> J[HashPassword]
+    A --> K[CheckPassword]
+```
+Explanation:
+
+* `A` represents the `Member` struct.
+* `B` represents the `OrganizationID` field in the `Member` struct.
+* `C` represents the `Name` field in the `Member` struct.
+* `D` represents the `Email` field in the `Member` struct.
+* `E` represents the `Phone` field in the `Member` struct.
+* `F` represents the `Bio` field in the `Member` struct.
+* `G` represents the `Role` field in the `Member` struct.
+* `H` represents the `
+
+```

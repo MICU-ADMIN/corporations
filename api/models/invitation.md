@@ -73,3 +73,24 @@ func (invitation *Invitation) CheckPassword(providedPassword string) error {
 }
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+    Invitation[Invitation] --> Database[database]
+    Invitation --> CreateInvitationRecord[CreateInvitationRecord]
+    Invitation --> HashPassword[HashPassword]
+    Invitation --> CheckPassword[CheckPassword]
+    Invitation --> SendEmail[SendEmail]
+```
+Explanation:
+
+* `Invitation` is the main struct in the file, representing an invitation.
+* `Database` is the database connection, which is used to store and retrieve invitation records.
+* `CreateInvitationRecord` is a function that creates a new invitation record in the database. It takes a pointer to an `Invitation` struct as an argument and returns an error if there is an issue creating the record.
+* `HashPassword` is a function that encrypts the invitation's password using the `bcrypt` package. It takes a string as an argument and returns an error if there is an issue encrypting the password.
+* `CheckPassword` is a function that compares the invitation's encrypted password to a provided password.
+
+```

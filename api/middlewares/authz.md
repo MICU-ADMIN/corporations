@@ -56,3 +56,23 @@ func Authz() gin.HandlerFunc {
 }
 
 ```
+
+
+```mermaid
+graph LR
+    A[Authz Middleware] --> B[Get Authorization Header]
+    B --> C[Split Token]
+    C --> D[Validate Token]
+    D --> E[Get Claims]
+    E --> F[Set Context]
+    F --> G[Continue to Next Handler]
+    G --> H[Return 401 if Token is Not Valid]
+    H --> I[Return 403 if Authorization Header is Not Present]
+    I --> J[Abort Request]
+```
+In this overview, the `Authz` middleware is represented by node `A`, which takes a `gin.Context` as an argument. The middleware then performs the following steps:
+1. Get the `Authorization` header from the request using node `B`.
+2. Split the `Authorization` header into token and issuer using node `C`.
+3. Validate the token using node `D`. If the token is valid, the middleware gets the claims from the token using node `E`.
+
+

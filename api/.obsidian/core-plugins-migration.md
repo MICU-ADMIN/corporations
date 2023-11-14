@@ -32,3 +32,31 @@
 }
 
 ```
+
+```mermaid
+
+Here is a Mermaid Markdown overview for the Go file you provided:
+```mermaid
+graph LR
+  * file-explorer: true (blue)
+  * global-search: true (green)
+  * switcher: true (orange)
+  * graph: true (purple)
+  * backlink: true (pink)
+  * canvas: true (gray)
+  * outgoing-link: true (blue)
+  * tag-pane: true (green)
+  * properties: false (gray)
+  * page-preview: true (purple)
+  * daily-notes: true (pink)
+  * templates: true (blue)
+  * note-composer: true (orange)
+  * command-palette: true (gray)
+  * slash-command: false (pink)
+  * editor-status: true (purple)
+  * bookmarks: true (green)
+  * markdown-importer: false (gray)
+  * zk-prefixer: false (pink)
+  * random-note: false (blue)
+
+```

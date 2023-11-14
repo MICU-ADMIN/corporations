@@ -156,3 +156,23 @@ func Login(c *gin.Context) {
 }
 
 ```
+
+```mermaid
+graph LR
+    A[Signup] --> B[Bind JSON user data]
+    B --> C[Hash Password]
+    C --> D[Create User Record]
+    D --> E[Check Password]
+    E --> F[Generate Token]
+    F --> G[Refresh Token]
+    G --> H[Return Token and Refresh Token]
+```
+
+In this overview, the `Signup` function is represented by a node labeled `A`, and the following sub-steps are shown:
+* `Bind JSON user data`: The function binds the user data from the request body to a `UserDetails` struct using the `ShouldBindJSON` method.
+* `Hash Password`: The function hashes the user's password using the `HashPassword` method.
+* `Create User Record`: The function creates a new user record in the database using the `CreateUserRecord` method.
+* `Check Password`: The function checks if the user's password is correct using the `CheckPassword` method.
+* `Generate Token`: The function generates a
+
+```
