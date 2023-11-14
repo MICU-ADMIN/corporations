@@ -62,7 +62,11 @@ func main() {
 
 database.GlobalDB.AutoMigrate(&models.User{})
 database.GlobalDB.AutoMigrate(&models.Organization{})
-database.GlobalDB.AutoMigrate(&models.Invitation{})
+database.GlobalDB.AutoMigrate(&models.Display{})
+database.GlobalDB.AutoMigrate(&models.Event{})
+database.GlobalDB.AutoMigrate(&models.Member{})
+database.GlobalDB.AutoMigrate(&models.Prayer{})
+database.GlobalDB.AutoMigrate(&models.Website{})
 
 
 // Set up the router
@@ -129,16 +133,13 @@ func setupRouter() *gin.Engine {
    auth.GET("/profile", controllers.Retrieve_Profile)
   
    // Retrieval of the organization
-   auth.GET("/organization", controllers.Retrieve_Organization)
-   
-   
+   auth.GET("/organization", controllers.Retrieve_Organization)   
 
   //  creation of the organization
    auth.POST("/organization", controllers.Create_Organization)
-
    
   //  // creation of the invitation
-    auth.POST("/organization/invite", controllers.Invite_Organization)
+  auth.POST("/organization/invite", controllers.Invite_Organization)
  
     //  // the response of the invitation
     auth.PUT("/organization/invite", controllers.Accept_Organization)

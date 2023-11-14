@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Authz is a middleware that validates token and authorizes users
+// Orgz is a middleware that validates token and authorizes users
 // It takes a gin.Context as an argument and returns a gin.HandlerFunc
 // This function is responsible for validating the token sent by the client in the Authorization header
 // and authorizing the user if the token is valid.
-func Authz() gin.HandlerFunc {
+func Orgz() gin.HandlerFunc {
  return func(c *gin.Context) {
   // Get the Authorization header from the request
   clientToken := c.Request.Header.Get("Authorization")
@@ -48,7 +48,6 @@ func Authz() gin.HandlerFunc {
   // Set the claims in the context
   c.Set("email", claims.Email)
   // Continue to the next handler
-
   c.Next()
  }
 }
